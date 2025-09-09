@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reader Board Helper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #fafafa;
+    }
+    h1 {
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #e63946;
+      color: white;
+      display: block;
+      margin: 0 auto 2rem auto;
+    }
+    .result {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+    .result h2 {
+      margin-top: 0;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Reader Board Helper</h1><label for="oldText">Yesterday's Board Text:</label>
+
+  <textarea id="oldText"></textarea><label for="newText">Today's Board Text:</label>
+
+  <textarea id="newText"></textarea><button onclick="compareText()">Compare</button>
+
+  <div id="results"></div>  <script>
+    function countLetters(str) {
+      const counts = {};
+      str = str.toUpperCase().replace(/[^A-Z]/g, ""); // only letters
+      for (let char of str) {
+        counts[char] = (counts[char] || 0) + 1;
+      }
+      return counts;
+    }
+
+    function compareText() {
+      const oldStr = document.getElementById("oldText").value;
+      const newStr = document.getElementById("newText").value;
+
+      const oldCounts = countLetters(oldStr);
+      const newCounts = countLetters(newStr);
+
+      const keep = [];
+      const remove = [];
+      const add = [];
+
+      // Check for keeps and removes
+      for (let char in oldCounts) {
+        const oldNum = oldCounts[char];
+        const newNum = newCounts[char] || 0;
+        const keepNum = Math.min(oldNum, newNum);
+        const removeNum = oldNum - keepNum;
+
+        if (keepNum > 0) keep.push(`${char} ×${keepNum}`);
+        if (removeNum > 0) remove.push(`${char} ×${removeNum}`);
+      }
+
+      // Check for adds
+      for (let char in newCounts) {
+        const oldNum = oldCounts[char] || 0;
+        const newNum = newCounts[char];
+        const addNum = newNum - Math.min(oldNum, newNum);
+        if (addNum > 0) add.push(`${char} ×${addNum}`);
+      }
+
+      document.getElementById("results").innerHTML = `
+        <div class="result">
+          <h2>Keep</h2>
+          <ul>${keep.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+        </div>
+        <div class="result">
+          <h2>Remove</h2>
+          <ul>${remove.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+        </div>
+        <div class="result">
+          <h2>Add</h2>
+          <ul>${add.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+        </div>
+      `;
+    }
+  </script></body>
+</html>
