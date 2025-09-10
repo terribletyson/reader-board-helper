@@ -1,160 +1,145 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reader Board Helper</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 1rem;
-      background: linear-gradient(to bottom, #ffe5b4, #fff8e1);
-      color: #333;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e63946, #f1fa3c, #2a9d8f, #264653);
+      background-size: 600% 600%;
+      animation: gradientShift 20s ease infinite;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
     }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     h1 {
+      font-size: 2rem;
+      margin-bottom: 15px;
       text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #e63946;
+      font-weight: 600;
     }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
+
     textarea {
       width: 100%;
-      height: 70px;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      padding: 0.8rem;
+      max-width: 400px;
+      height: 60px;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1rem;
       border-radius: 12px;
-      border: 2px solid #e63946;
-      box-sizing: border-box;
-      background-color: #fff3e6;
-    }
-    button {
-      width: 100%;
-      padding: 1.1rem;
-      font-size: 1.3rem;
-      font-weight: bold;
-      cursor: pointer;
       border: none;
-      border-radius: 16px;
+      outline: none;
+      resize: none;
+    }
+
+    button {
       background-color: #e63946;
-      color: white;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-      transition: background 0.2s, transform 0.1s;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 12px 0;
+      transition: transform 0.2s, background-color 0.2s;
     }
+
     button:hover {
+      transform: scale(1.05);
       background-color: #d62839;
-      transform: scale(1.02);
     }
-    .result {
-      background: #fff8e1;
-      border-radius: 16px;
-      padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      margin-bottom: 1rem;
-      border: 2px solid #e63946;
+
+    #results {
+      margin-top: 20px;
+      max-width: 400px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .result h2 {
-      margin-top: 0;
-      font-size: 1.4rem;
-      border-bottom: 2px solid #e63946;
-      padding-bottom: 0.3rem;
-      color: #e63946;
+
+    .result-section {
+      margin-bottom: 12px;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+
+    .result-section strong {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #f1fa3c;
     }
-    li {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
+
+    .letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-      textarea {
-        font-size: 1.1rem;
-      }
-      button {
-        font-size: 1.2rem;
-        padding: 1rem;
-      }
-      li {
-        font-size: 1.1rem;
-      }
+
+    .letter {
+      background: #2a9d8f;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
     }
+
+    .remove { background: #e63946; }
+    .add { background: #f1fa3c; color: #000; }
   </style>
 </head>
 <body>
-  <h1>🍕 Reader Board Helper 🍕</h1><label for="oldText">Yesterday's Board Text:</label>
+  <h1>Reader Board Helper 🍕</h1>
 
-  <textarea id="oldText" placeholder="e.g., TYSON"></textarea><label for="newText">Today's Board Text:</label>
+  <textarea id="currentName" placeholder="TYSON"></textarea>
+  <textarea id="newName" placeholder="THE GOAT"></textarea>
+  <button onclick="compareNames()">Compare</button>
 
-  <textarea id="newText" placeholder="e.g., BEEN TO JAPAN"></textarea><button onclick="compareText()">Compare</button>
+  <div id="results"></div>
 
-  <div id="results"></div>  <script>
-    function countLetters(str) {
-      const counts = {};
-      str = str.toUpperCase().replace(/[^A-Z]/g, "");
-      for (let char of str) {
-        counts[char] = (counts[char] || 0) + 1;
-      }
-      return counts;
-    }
+  <script>
+    function compareNames() {
+      const current = document.getElementById('currentName').value.trim().toUpperCase();
+      const next = document.getElementById('newName').value.trim().toUpperCase();
 
-    function compareText() {
-      const oldStr = document.getElementById("oldText").value;
-      const newStr = document.getElementById("newText").value;
+      const currentArr = current.split('');
+      const nextArr = next.split('');
 
-      const oldCounts = countLetters(oldStr);
-      const newCounts = countLetters(newStr);
+      const keep = currentArr.filter(letter => nextArr.includes(letter));
+      const remove = currentArr.filter(letter => !nextArr.includes(letter));
+      const add = nextArr.filter(letter => !currentArr.includes(letter));
 
-      const keep = [];
-      const remove = [];
-      const add = [];
-
-      for (let char in oldCounts) {
-        const oldNum = oldCounts[char];
-        const newNum = newCounts[char] || 0;
-        const keepNum = Math.min(oldNum, newNum);
-        const removeNum = oldNum - keepNum;
-        if (keepNum > 0) keep.push(`${char} ×${keepNum}`);
-        if (removeNum > 0) remove.push(`${char} ×${removeNum}`);
-      }
-
-      for (let char in newCounts) {
-        const oldNum = oldCounts[char] || 0;
-        const newNum = newCounts[char];
-        const addNum = newNum - Math.min(oldNum, newNum);
-        if (addNum > 0) add.push(`${char} ×${addNum}`);
-      }
-
-      document.getElementById("results").innerHTML = `
-        <div class="result">
-          <h2>Keep</h2>
-          <ul>${keep.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+      document.getElementById('results').innerHTML = `
+        <div class="result-section">
+          <strong>Keep:</strong>
+          <div class="letters">${keep.map(l => `<div class="letter">${l}</div>`).join('')}</div>
         </div>
-        <div class="result">
-          <h2>Remove</h2>
-          <ul>${remove.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+        <div class="result-section">
+          <strong>Remove:</strong>
+          <div class="letters">${remove.map(l => `<div class="letter remove">${l}</div>`).join('')}</div>
         </div>
-        <div class="result">
-          <h2>Add</h2>
-          <ul>${add.map(c => `<li>${c}</li>`).join("") || "<li>None</li>"}</ul>
+        <div class="result-section">
+          <strong>Add:</strong>
+          <div class="letters">${add.map(l => `<div class="letter add">${l}</div>`).join('')}</div>
         </div>
       `;
     }
-  </script></body>
+  </script>
+</body>
 </html>
