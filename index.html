@@ -99,9 +99,8 @@ textarea{
 .result-title{font-weight:600;margin-bottom:8px;color:var(--gold)}
 .letters{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
-  padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;gap:8px
+  padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px
 }
-.chip span.letter{min-width:18px;text-align:center}
 .chip.keep{background: rgba(255,255,255,0.12); color:white}
 .chip.remove{background: rgba(0,0,0,0.4); color:#ffd7d9}
 .chip.add{background: var(--gold); color:#111}
@@ -130,60 +129,43 @@ textarea{
 
 <div id="results" aria-live="polite"></div>
 <div style="height:6px"></div>
-<div class="muted-small">Tip: punctuation &amp; spaces are ignored. Results show counts (e.g. A ×2).</div>
+<div class="muted-small">Tip: punctuation &amp; spaces are ignored.</div>
 
   </div>  <script>
-    function countLetters(str){
-      const counts = {};
-      if(!str) return counts;
-      const s = str.toUpperCase().replace(/[^A-Z]/g,'');
-      for(const ch of s){ counts[ch] = (counts[ch]||0) + 1; }
-      return counts;
+    function filterLetters(str){
+      return str.toUpperCase().replace(/[^A-Z]/g,'').split('');
     }
 
     function compare(){
-      const oldText = document.getElementById('oldPhrase').value || '';
-      const newText = document.getElementById('newPhrase').value || '';
+      const oldArr = filterLetters(document.getElementById('oldPhrase').value);
+      const newArr = filterLetters(document.getElementById('newPhrase').value);
 
-      const oldCounts = countLetters(oldText);
-      const newCounts = countLetters(newText);
-
+      const oldCopy = [...oldArr];
       const keep = [];
       const remove = [];
       const add = [];
 
-      // Keep and remove from old
-      for(const ch in oldCounts){
-        const o = oldCounts[ch] || 0;
-        const n = newCounts[ch] || 0;
-        const k = Math.min(o,n);
-        if(k>0) keep.push({ch,count:k});
-        if(o - k > 0) remove.push({ch,count: o - k});
+      // Determine Keep and Remove based on old vs new
+      for(const ch of oldArr){
+        const idx = newArr.indexOf(ch);
+        if(idx!==-1){
+          keep.push(ch);
+          newArr[idx] = null; // mark as used
+        } else {
+          remove.push(ch);
+        }
       }
 
-      // Add from new
-      for(const ch in newCounts){
-        const o = oldCounts[ch] || 0;
-        const n = newCounts[ch] || 0;
-        const k = Math.min(o,n);
-        if(n - k > 0) add.push({ch,count: n - k});
+      // Remaining letters in newArr are Add
+      for(const ch of newArr){
+        if(ch!==null) add.push(ch);
       }
-
-      // Sort by letter for consistent order
-      const byLetter = (a,b)=> a.ch.localeCompare(b.ch);
-      keep.sort(byLetter);
-      remove.sort(byLetter);
-      add.sort(byLetter);
 
       const results = document.getElementById('results');
-      if(keep.length===0 && remove.length===0 && add.length===0){
-        results.innerHTML = '<div class="result-card">Enter two phrases to compare.</div>';
-        return;
-      }
 
       function renderList(title, list, cls){
         if(list.length===0) return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"muted-small\">None</div></div>`;
-        const chips = list.map(item => `<div class=\"chip ${cls}\"><span class=\"letter\">${item.ch}</span><span>x${item.count}</span></div>`).join('');
+        const chips = list.map(ch => `<div class=\"chip ${cls}\">${ch}</div>`).join('');
         return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"letters\">${chips}</div></div>`;
       }
 
@@ -197,7 +179,6 @@ textarea{
       document.getElementById('results').innerHTML='';
     });
 
-    // allow Enter+Cmd/Ctrl to compare quickly
     document.addEventListener('keydown', (e)=>{
       if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='enter') compare();
     });
