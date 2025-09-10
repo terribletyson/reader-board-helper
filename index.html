@@ -171,16 +171,21 @@ textarea{
 
       function renderList(title,list,type){
         if(list.length===0) return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"muted-small\">None</div></div>`;
-        // Count total occurrences
+        // Count total occurrences and track first appearance
         const counts = {};
-        list.forEach(ch=>counts[ch]=(counts[ch]||0)+1);
-        const chips = list.map(ch=>{
-          const count = counts[ch];
-          const display = count>1 ? `${ch}<sup>×${count}</sup>` : ch;
-          counts[ch]=counts[ch]-1; // decrement so only first instance shows sup
-          return `<div class=\"chip ${type}\">${display}</div>`;
-        }).join('');
-        return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"letters\">${chips}</div></div>`;
+        const firstAppearance = {};
+        list.forEach((ch,i)=>{counts[ch]=(counts[ch]||0)+1; if(firstAppearance[ch]===undefined) firstAppearance[ch]=i;});
+
+        const chips = [];
+        list.forEach((ch,i)=>{
+          if(firstAppearance[ch]===i){
+            const count = counts[ch];
+            const display = count>1 ? `${ch}<sup>×${count}</sup>` : ch;
+            chips.push(`<div class=\"chip ${type}\">${display}</div>`);
+          }
+        });
+
+        return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"letters\">${chips.join('')}</div></div>`;
       }
 
       const results = document.getElementById('results');
