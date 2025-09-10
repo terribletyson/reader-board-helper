@@ -99,11 +99,12 @@ textarea{
 .result-title{font-weight:600;margin-bottom:8px;color:var(--gold)}
 .letters{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
-  padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px
+  padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px;
 }
 .chip.keep{background: rgba(255,255,255,0.12); color:white}
 .chip.remove{background: rgba(0,0,0,0.4); color:#ffd7d9}
 .chip.add{background: var(--gold); color:#111}
+.chip sup{font-size:0.6em;margin-left:2px;vertical-align:super;color:rgba(255,255,255,0.7)}
 
 .muted-small{font-size:0.88rem;color:rgba(255,255,255,0.8)}
 
@@ -140,36 +141,50 @@ textarea{
       const oldArr = filterLetters(document.getElementById('oldPhrase').value);
       const newArr = filterLetters(document.getElementById('newPhrase').value);
 
-      const oldCopy = [...oldArr];
       const keep = [];
       const remove = [];
       const add = [];
 
-      // Determine Keep and Remove based on old vs new
+      const oldCounts = {};
+      const newCounts = {};
+
+      for(const ch of oldArr) oldCounts[ch] = (oldCounts[ch]||0)+1;
+      for(const ch of newArr) newCounts[ch] = (newCounts[ch]||0)+1;
+
+      const newArrCopy = [...newArr];
+
+      // Keep and Remove based on old vs new order
       for(const ch of oldArr){
-        const idx = newArr.indexOf(ch);
+        const idx = newArrCopy.indexOf(ch);
         if(idx!==-1){
           keep.push(ch);
-          newArr[idx] = null; // mark as used
+          newArrCopy[idx]=null;
         } else {
           remove.push(ch);
         }
       }
 
-      // Remaining letters in newArr are Add
-      for(const ch of newArr){
+      // Add letters remaining in newArrCopy
+      for(const ch of newArrCopy){
         if(ch!==null) add.push(ch);
       }
 
-      const results = document.getElementById('results');
-
-      function renderList(title, list, cls){
+      function renderList(title,list,type){
         if(list.length===0) return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"muted-small\">None</div></div>`;
-        const chips = list.map(ch => `<div class=\"chip ${cls}\">${ch}</div>`).join('');
+        // Count total occurrences
+        const counts = {};
+        list.forEach(ch=>counts[ch]=(counts[ch]||0)+1);
+        const chips = list.map(ch=>{
+          const count = counts[ch];
+          const display = count>1 ? `${ch}<sup>×${count}</sup>` : ch;
+          counts[ch]=counts[ch]-1; // decrement so only first instance shows sup
+          return `<div class=\"chip ${type}\">${display}</div>`;
+        }).join('');
         return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"letters\">${chips}</div></div>`;
       }
 
-      results.innerHTML = renderList('Keep', keep, 'keep') + renderList('Remove', remove, 'remove') + renderList('Add', add, 'add');
+      const results = document.getElementById('results');
+      results.innerHTML = renderList('Keep', keep,'keep') + renderList('Remove',remove,'remove') + renderList('Add', add,'add');
     }
 
     document.getElementById('compareBtn').addEventListener('click', compare);
