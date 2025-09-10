@@ -1,198 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reader Board Helper</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --crimson: #DC143C;
-      --gold: #FFD700;
-      --card-bg: rgba(255,255,255,0.08);
-      --muted: rgba(255,255,255,0.85);
-    }
-    html,body{height:100%;}
     body {
       margin: 0;
-      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #DC143C 0%, #a70f31 40%, #FFD700 100%);
       color: white;
-      background: linear-gradient(135deg, var(--crimson) 0%, #a70f31 40%, var(--gold) 100%);
-      background-size: 300% 300%;
-      animation: gradientShift 18s ease infinite;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:24px;
-      box-sizing:border-box;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
     }
-    @keyframes gradientShift{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
-
-    .container{
-      width:100%;
-      max-width:680px;
-      background: rgba(0,0,0,0.18);
-      border-radius:14px;
-      padding:18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      backdrop-filter: blur(6px);
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
     }
-
-    h1{
-      margin:0 0 12px 0;
-      font-size:1.5rem;
-      font-weight:600;
-      color:var(--muted);
-      text-align:center;
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      resize: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
     }
-
-    .inputs{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
-    textarea{
-      width:100%;
-      min-height:56px;
-      resize:none;
-      padding:12px;
-      border-radius:10px;
-      border:none;
-      font-size:1rem;
-      box-sizing:border-box;
-      background: rgba(255,255,255,0.06);
-      color:var(--muted);
-      outline: none;
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #FFD700;
+      color: #111;
     }
-
-    .controls{display:flex;gap:10px;margin-top:6px}
-    .controls button{
-      flex:1;
-      padding:12px 14px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-      font-size:1rem;
-      color:#111;
-      background:var(--gold);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-      transition:transform .12s ease, box-shadow .12s ease;
+    .result-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
     }
-    .controls button.secondary{
-      background: rgba(255,255,255,0.12);
-      color:var(--muted);
-      box-shadow:none;
+    .letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
     }
-    .controls button:active{transform:translateY(1px)}
-
-    #results{
-      margin-top:14px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+    .chip {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
     }
-
-    .result-card{
-      padding:10px 12px;
-      border-radius:10px;
-      background: var(--card-bg);
-      color:var(--muted);
-    }
-    .result-title{font-weight:600;margin-bottom:8px;color:var(--gold)}
-    .letters{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{
-      padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px;
-    }
-    .chip.keep{background: rgba(255,255,255,0.12); color:white}
-    .chip.remove{background: rgba(0,0,0,0.4); color:#ffd7d9}
-    .chip.add{background: var(--gold); color:#111}
-    .chip sup{font-size:0.6em;margin-left:2px;vertical-align:super;color:#444;}
-
-    .muted-small{font-size:0.88rem;color:rgba(255,255,255,0.8)}
-
-    @media (max-width:520px){
-      .container{padding:14px}
-      h1{font-size:1.2rem}
-      .controls button{padding:10px;font-size:0.95rem}
-    }
+    .chip.keep { background: rgba(255,255,255,0.2); }
+    .chip.remove { background: rgba(255,0,0,0.5); }
+    .chip.add { background: #FFD700; color: #111; }
+    .chip sup { font-size: 0.6em; margin-left: 2px; vertical-align: super; color: #444; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Reader Board Helper</h1>
+    <textarea id="oldText" placeholder="old phrase"></textarea>
+    <textarea id="newText" placeholder="new phrase"></textarea>
+    <button onclick="compareText()">Compare</button><div id="results"></div>
 
-    <div class="inputs">
-      <textarea id="oldPhrase" placeholder="old phrase"></textarea>
-      <textarea id="newPhrase" placeholder="new phrase"></textarea>
-    </div>
-
-    <div class="controls">
-      <button id="compareBtn">Compare</button>
-      <button id="clearBtn" class="secondary">Clear</button>
-    </div>
-
-    <div id="results" aria-live="polite"></div>
-    <div style="height:6px"></div>
-    <div class="muted-small">Tip: punctuation &amp; spaces are ignored.</div>
-  </div>
-
-  <script>
-    function filterLetters(str){
-      return str.toUpperCase().replace(/[^A-Z]/g,'').split('');
+  </div>  <script>
+    function countLetters(str){
+      const counts = {};
+      str.toUpperCase().replace(/[^A-Z]/g, '').split('').forEach(ch => {
+        counts[ch] = (counts[ch] || 0) + 1;
+      });
+      return counts;
     }
 
-    function compare(){
-      const oldArr = filterLetters(document.getElementById('oldPhrase').value);
-      const newArr = filterLetters(document.getElementById('newPhrase').value);
+    function compareText(){
+      const oldStr = document.getElementById('oldText').value;
+      const newStr = document.getElementById('newText').value;
+      const oldCounts = countLetters(oldStr);
+      const newCounts = countLetters(newStr);
 
-      function getCategoryLetters(sourceArr, targetArr){
-        const result = [];
-        const tempTarget = [...targetArr];
-        sourceArr.forEach(ch => {
-          const idx = tempTarget.indexOf(ch);
-          if(idx !== -1){
-            result.push(ch);
-            tempTarget[idx] = null;
-          }
-        });
-        return result;
+      const keep = [];
+      const remove = [];
+      const add = [];
+
+      // Determine Keep and Remove
+      for(const ch in oldCounts){
+        const oldNum = oldCounts[ch];
+        const newNum = newCounts[ch] || 0;
+        const keepNum = Math.min(oldNum, newNum);
+        if(keepNum > 0) keep.push({ch, count: keepNum});
+        if(oldNum > keepNum) remove.push({ch, count: oldNum - keepNum});
       }
 
-      const keep = getCategoryLetters(oldArr, newArr);
-      const remove = getCategoryLetters(oldArr, []).filter(ch => !keep.includes(ch));
-      const add = getCategoryLetters(newArr, []).filter(ch => !keep.includes(ch));
-
-      function renderList(title, list, type){
-        if(list.length === 0) return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"muted-small\">None</div></div>`;
-        const counts = {};
-        list.forEach(ch => counts[ch] = (counts[ch] || 0) + 1);
-        const used = {};
-        const chips = [];
-        list.forEach(ch => {
-          if(!used[ch]){
-            used[ch] = true;
-            const display = counts[ch] > 1 ? `${ch}<sup>×${counts[ch]}</sup>` : ch;
-            chips.push(`<div class=\"chip ${type}\">${display}</div>`);
-          }
-        });
-        return `<div class=\"result-card\"><div class=\"result-title\">${title}</div><div class=\"letters\">${chips.join('')}</div></div>`;
+      // Determine Add
+      for(const ch in newCounts){
+        const oldNum = oldCounts[ch] || 0;
+        const newNum = newCounts[ch];
+        if(newNum > oldNum) add.push({ch, count: newNum - oldNum});
       }
 
-      const results = document.getElementById('results');
-      results.innerHTML = renderList('Keep', keep, 'keep') + renderList('Remove', remove, 'remove') + renderList('Add', add, 'add');
+      function renderCategory(title, list, type){
+        if(list.length === 0) return `<div class='result-card'><strong>${title}</strong><div>None</div></div>`;
+        const lettersHtml = list.map(l => l.count > 1 ? `<div class='chip ${type}'>${l.ch}<sup>${l.count}</sup></div>` : `<div class='chip ${type}'>${l.ch}</div>`).join('');
+        return `<div class='result-card'><strong>${title}</strong><div class='letters'>${lettersHtml}</div></div>`;
+      }
+
+      document.getElementById('results').innerHTML = renderCategory('Keep', keep, 'keep') + renderCategory('Remove', remove, 'remove') + renderCategory('Add', add, 'add');
     }
-
-    document.getElementById('compareBtn').addEventListener('click', compare);
-    document.getElementById('clearBtn').addEventListener('click', ()=>{
-      document.getElementById('oldPhrase').value = '';
-      document.getElementById('newPhrase').value = '';
-      document.getElementById('results').innerHTML = '';
-    });
-
-    document.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase() === 'enter') compare();
-    });
-  </script>
-</body>
+  </script></body>
 </html>
