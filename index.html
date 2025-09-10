@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
@@ -29,110 +30,114 @@
       0%{background-position:0% 50%;}
       50%{background-position:100% 50%;}
       100%{background-position:0% 50%;}
-    }.container{
-  width:100%;
-  max-width:680px;
-  background: rgba(0,0,0,0.18);
-  border-radius:14px;
-  padding:18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  backdrop-filter: blur(6px);
-}
+    }
 
-h1{
-  margin:0 0 12px 0;
-  font-size:1.5rem;
-  font-weight:600;
-  color:var(--muted);
-  text-align:center;
-}
+    .container{
+      width:100%;
+      max-width:680px;
+      background: rgba(0,0,0,0.18);
+      border-radius:14px;
+      padding:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
 
-.inputs{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
-textarea{
-  width:100%;
-  min-height:56px;
-  resize:none;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  font-size:1rem;
-  box-sizing:border-box;
-  background: rgba(255,255,255,0.06);
-  color:var(--muted);
-  outline: none;
-}
+    h1{
+      margin:0 0 12px 0;
+      font-size:1.5rem;
+      font-weight:600;
+      color:var(--muted);
+      text-align:center;
+    }
 
-.controls{display:flex;gap:10px;margin-top:6px}
-.controls button{
-  flex:1;
-  padding:12px 14px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-  font-size:1rem;
-  color:#111;
-  background:var(--gold);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  transition:transform .12s ease, box-shadow .12s ease;
-}
-.controls button.secondary{
-  background: rgba(255,255,255,0.12);
-  color:var(--muted);
-  box-shadow:none;
-}
-.controls button:active{transform:translateY(1px)}
+    .inputs{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+    textarea{
+      width:100%;
+      min-height:56px;
+      resize:none;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      font-size:1rem;
+      box-sizing:border-box;
+      background: rgba(255,255,255,0.06);
+      color:var(--muted);
+      outline: none;
+    }
 
-#results{
-  margin-top:14px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+    .controls{display:flex;gap:10px;margin-top:6px}
+    .controls button{
+      flex:1;
+      padding:12px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      font-size:1rem;
+      color:#111;
+      background:var(--gold);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .controls button.secondary{
+      background: rgba(255,255,255,0.12);
+      color:var(--muted);
+      box-shadow:none;
+    }
+    .controls button:active{transform:translateY(1px)}
 
-.result-card{
-  padding:10px 12px;
-  border-radius:10px;
-  background: var(--card-bg);
-  color:var(--muted);
-}
-.result-title{font-weight:600;margin-bottom:8px;color:var(--gold)}
-.letters{display:flex;flex-wrap:wrap;gap:8px}
-.chip{
-  padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px;
-}
-.chip.keep{background: rgba(255,255,255,0.12); color:white}
-.chip.remove{background: rgba(0,0,0,0.4); color:#ffd7d9}
-.chip.add{background: var(--gold); color:#111}
-.chip sup{font-size:0.6em;margin-left:2px;vertical-align:super;color:#444;}
+    #results{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
 
-.muted-small{font-size:0.88rem;color:rgba(255,255,255,0.8)}
+    .result-card{
+      padding:10px 12px;
+      border-radius:10px;
+      background: var(--card-bg);
+      color:var(--muted);
+    }
+    .result-title{font-weight:600;margin-bottom:8px;color:var(--gold)}
+    .letters{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;min-width:30px;
+    }
+    .chip.keep{background: rgba(255,255,255,0.12); color:white}
+    .chip.remove{background: rgba(0,0,0,0.4); color:#ffd7d9}
+    .chip.add{background: var(--gold); color:#111}
+    .chip sup{font-size:0.6em;margin-left:2px;vertical-align:super;color:#444;}
 
-@media (max-width:520px){
-  .container{padding:14px}
-  h1{font-size:1.2rem}
-  .controls button{padding:10px;font-size:0.95rem}
-}
+    .muted-small{font-size:0.88rem;color:rgba(255,255,255,0.8)}
 
+    @media (max-width:520px){
+      .container{padding:14px}
+      h1{font-size:1.2rem}
+      .controls button{padding:10px;font-size:0.95rem}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Reader Board Helper</h1><div class="inputs">
-  <textarea id="oldPhrase" placeholder="old phrase"></textarea>
-  <textarea id="newPhrase" placeholder="new phrase"></textarea>
-</div>
+    <h1>Reader Board Helper</h1>
 
-<div class="controls">
-  <button id="compareBtn">Compare</button>
-  <button id="clearBtn" class="secondary">Clear</button>
-</div>
+    <div class="inputs">
+      <textarea id="oldPhrase" placeholder="old phrase"></textarea>
+      <textarea id="newPhrase" placeholder="new phrase"></textarea>
+    </div>
 
-<div id="results" aria-live="polite"></div>
-<div style="height:6px"></div>
-<div class="muted-small">Tip: punctuation &amp; spaces are ignored.</div>
+    <div class="controls">
+      <button id="compareBtn">Compare</button>
+      <button id="clearBtn" class="secondary">Clear</button>
+    </div>
 
-  </div>  <script>
+    <div id="results" aria-live="polite"></div>
+    <div style="height:6px"></div>
+    <div class="muted-small">Tip: punctuation &amp; spaces are ignored.</div>
+  </div>
+
+  <script>
     function filterLetters(str){
       return str.toUpperCase().replace(/[^A-Z]/g,'').split('');
     }
@@ -188,5 +193,6 @@ textarea{
     document.addEventListener('keydown', (e)=>{
       if((e.ctrlKey||e.metaKey) && e.key.toLowerCase() === 'enter') compare();
     });
-  </script></body>
+  </script>
+</body>
 </html>
